@@ -32,12 +32,17 @@ import type { NavItem } from "@/types/navigation"
 import type { Prompt } from "@/types/prompts";
 import { AboutDialog } from "@/components/AboutDialog";
 
+type WindowState = "normal" | "maximized" | "minimized" | "closed";
+
 interface SidebarContentProps {
   isCollapsed: boolean;
+  windowState: WindowState;
+  onOpenChat: () => void;
+  onStart: () => void;
 }
 
 
-export function SidebarContent({ isCollapsed }: SidebarContentProps) {
+export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart }: SidebarContentProps) {
   const [mounted, setMounted] = React.useState(false);
   const [aboutOpen, setAboutOpen] = React.useState(false);
   const { theme, setTheme } = useTheme();
@@ -148,40 +153,42 @@ export function SidebarContent({ isCollapsed }: SidebarContentProps) {
             </div>
           )}
         </div>
-        {true && !isCollapsed 
-          ? (
-            <Button variant="outline" className="w-full h-9 rounded-full cursor-pointer" disabled>
+        {/* Open Chat — visible when window is normal/maximized/minimized, enabled only when minimized */}
+        {windowState !== "closed" && (
+          !isCollapsed ? (
+            <Button variant="outline" className="w-full h-9 rounded-full cursor-pointer" disabled={windowState !== "minimized"} onClick={onOpenChat}>
              <ExternalLink className="size-4" /> 
              Open Chat
             </Button>
           ) : (
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
-                <Button variant="outline" className="w-full h-9 rounded-full cursor-pointer" disabled>
+                <Button variant="outline" className="w-full h-9 rounded-full cursor-pointer" disabled={windowState !== "minimized"} onClick={onOpenChat}>
                   <ExternalLink className="size-4" /> 
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right">Open Chat</TooltipContent>
             </Tooltip>
           )
-        }
-        {true && !isCollapsed 
-          ? (
-            <Button variant="outlinePrimary" className="w-full h-9 rounded-full cursor-pointer">
+        )}
+        {/* Start — only visible when window is closed */}
+        {windowState === "closed" && (
+          !isCollapsed ? (
+            <Button variant="outlinePrimary" className="w-full h-9 rounded-full cursor-pointer" onClick={onStart}>
              <Sparkles className="size-4" /> 
              Start
             </Button>
           ) : (
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
-                <Button variant="outlinePrimary" className="w-full h-9 rounded-full cursor-pointer">
+                <Button variant="outlinePrimary" className="w-full h-9 rounded-full cursor-pointer" onClick={onStart}>
                   <Sparkles className="size-4" /> 
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right">Start</TooltipContent>
             </Tooltip>
           )
-        }
+        )}
       </div>
     </div>
     <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />

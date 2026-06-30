@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { Logo } from "@/components/Logo";
 import {
   Dialog,
   DialogContent,
@@ -39,7 +40,7 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
         <DialogHeader className="px-6 pt-6 pb-4 shrink-0">
           <DialogTitle className="flex items-center gap-2 text-xl">
             About ChatMM
-            <img src="/logo.svg" alt="ChatMM Logo" className="h-8 w-8" />
+            <Logo size={32} />
           </DialogTitle>
           <DialogDescription>
             A conversational portfolio experience for recruiters
@@ -58,7 +59,7 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed pl-8 font-regular">
               An interactive ChatGPT-inspired portfolio where recruiters can explore
-              my experience, projects, technical skills, and résumé through a
+              my experience, projects, technical skills, and rÃ©sumÃ© through a
               conversational interface.
             </p>
           </section>
@@ -93,7 +94,7 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
                 { icon: Layout, label: "Collapsible sidebar" },
                 { icon: Sun, label: "Dark/light themes" },
                 { icon: User, label: "Suggested recruiter prompts" },
-                { icon: FolderOpen, label: "Résumé viewer" },
+                { icon: FolderOpen, label: "rÃ©sumÃ© viewer" },
                 { icon: Zap, label: "Project showcase" },
                 { icon: Sparkles, label: "Smooth micro-interactions" },
               ].map(({ icon: Icon, label }) => (
@@ -134,3 +135,7 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
     </Dialog>
   );
 }
+
+
+
+

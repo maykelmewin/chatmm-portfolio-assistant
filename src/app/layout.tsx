@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "chatMM | AI-Inspired Developer Portfolio",
-  description: "chatMM is an AI-inspired interactive portfolio built with Next.js, featuring a ChatGPT-style interface to explore projects, skills, and developer experience.",
+  title: "ChatMM | AI-Inspired Developer Portfolio",
+  description: "ChatMM is an AI-inspired interactive portfolio built with Next.js, featuring a ChatGPT-style interface to explore projects, skills, and developer experience.",
   icons: {
     icon: [
       { url: "/favicon/favicon.ico", sizes: "any" },

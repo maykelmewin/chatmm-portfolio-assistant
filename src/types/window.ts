@@ -1,0 +1,1 @@
+export type WindowState = "normal" | "maximized" | "minimized" | "closed";

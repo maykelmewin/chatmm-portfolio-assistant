@@ -2,18 +2,23 @@
 
 import React, { useState, useEffect } from "react";
 import { Menu, ChevronLeft, ChevronRight, X } from "lucide-react";
-import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SidebarContent } from "./SidebarContent";
+import { ChatMMHeader } from "./ChatMMHeader";
+
+type WindowState = "normal" | "maximized" | "minimized" | "closed";
 
 interface ResponsiveSidebarProps {
   children: React.ReactNode;
+  windowState: WindowState;
+  onOpenChat: () => void;
+  onStart: () => void;
 }
 
-export function ResponsiveSidebar({ children }: ResponsiveSidebarProps) {
+export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart }: ResponsiveSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -41,14 +46,14 @@ export function ResponsiveSidebar({ children }: ResponsiveSidebarProps) {
           isCollapsed ? "w-[70px]" : "w-[260px]"
         )}
       >
-        <SidebarContent isCollapsed={isCollapsed} />
+        <SidebarContent isCollapsed={isCollapsed} windowState={windowState} onOpenChat={onOpenChat} onStart={onStart} />
         
         {/* Collapse Toggle Button */}
         <Button
           variant="secondary"
           size="icon"
           className={cn(
-            "absolute -right-3 top-12 h-6 w-6 rounded-full border shadow-md z-30 transition-transform duration-300 cursor-pointer",
+            "absolute -right-3 top-12 h-6 w-6 rounded-full border shadow-md transition-transform duration-300 cursor-pointer z-100",
             isCollapsed && "rotate-180"
           )}
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -58,7 +63,7 @@ export function ResponsiveSidebar({ children }: ResponsiveSidebarProps) {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-19">
         {/* Mobile Header */}
         <header className="md:hidden flex items-center justify-between p-4 border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
           <div className="flex items-center gap-3">
@@ -69,15 +74,10 @@ export function ResponsiveSidebar({ children }: ResponsiveSidebarProps) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="p-0 w-[280px] sm:w-[320px]">
-                <SidebarContent isCollapsed={false} />
+                <SidebarContent isCollapsed={false} windowState={windowState} onOpenChat={onOpenChat} onStart={onStart} />
               </SheetContent>
             </Sheet>
-            <div className="flex items-center gap-1">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg shrink-0">
-                <Logo size={24} className="text-foreground" />
-              </div>
-              <span className="font-semibold text-sm">ChatMM</span>
-            </div>
+            <ChatMMHeader variant="mobile" />
           </div>
           <Avatar className="ring-2 ring-background size-8">
             <AvatarImage src="https://github.com/maykelmewin.png" />
@@ -86,8 +86,11 @@ export function ResponsiveSidebar({ children }: ResponsiveSidebarProps) {
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-y-auto p-0 md:p-0">
+        <div className="relative flex-1 overflow-y-auto p-0 md:p-0">
           {children}
+          <div className="md:flex hidden absolute top-0 left-0 z-99  justify-center items-center h-16 px-6">
+            <ChatMMHeader variant="desktop" />
+          </div>
         </div>
       </main>
     </div>
