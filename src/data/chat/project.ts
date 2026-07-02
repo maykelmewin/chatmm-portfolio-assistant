@@ -1,0 +1,131 @@
+export const projects = [
+  {
+    name: "ChatMM",
+    type: "Current Project",
+    url: null,
+    role: "Solo Developer & Designer",
+    timeframe: "Started July 2026 (1 week in development)",
+    status: "In Development — soon to deploy (Vercel or Netlify)",
+    description:
+      "An interactive ChatGPT-inspired portfolio where recruiters and visitors can explore Michael's experience, projects, and technical skills through a conversational AI interface. This project was built to demonstrate both UI/UX design capability and practical AI integration in a real application.",
+    techStack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS v4",
+      "shadcn/ui",
+      "Radix UI",
+      "Lucide React",
+      "next-themes",
+      "GSAP",
+      "Biome",
+      "Gemini API (free tier)",
+    ],
+    highlights: [
+      "ChatGPT-style conversational interface with AI-powered responses",
+      "Floating draggable window with minimize, maximize, and restore animations using GSAP",
+      "Dark and light theme support via next-themes",
+      "Fully responsive across desktop, tablet, and mobile",
+      "Smart suggested prompts to guide recruiter conversations",
+      "Interactive tool responses — inline resume viewer, project showcase, external links",
+      "Searchable chat history for revisiting past conversations",
+      "Smooth micro-interactions throughout the experience",
+      "Design System page documenting typography, logo history, and color tokens with a Figma Quick Draft reference",
+    ],
+    challenges: [
+      "Working with a free-tier Gemini model required careful token optimization and response structuring to maintain quality within rate limits — a constraint that influenced the chat response strategy toward concise, focused answers",
+    ],
+    designOwnership:
+      "Full UI/UX design from scratch — layout, spacing, color palette, typography, component hierarchy, and interaction patterns are entirely my own work. AI assisted only with code generation and scaffolding.",
+  },
+  {
+    name: "Portfolio Website",
+    type: "Personal Portfolio",
+    url: "https://portfolio-maykel.netlify.app/",
+    role: "Solo Developer & Designer",
+    timeframe: "Completed early 2026 (before joining MK Attractions)",
+    status: "Live — not actively maintained but will be updated",
+    description:
+      "A personal portfolio site built to showcase Michael's work while exploring 2D and 3D animation in web development. This project was a creative deep-dive into GSAP for scroll-triggered animations and Three.js for 3D graphics, combined with a clean two-color flat design. It served as both a professional showcase and a technical sandbox for pushing frontend animation boundaries.",
+    techStack: [
+      "AngularJS",
+      "GSAP",
+      "Three.js",
+      "CSS3",
+    ],
+    highlights: [
+      "Two-color flat design emphasizing smooth animations and visual storytelling",
+      "3D animation using Three.js integrated into the browsing experience",
+      "Interactive UI with custom sound effects for engagement",
+      "Responsive design with breakpoint testing across devices",
+      "Crypto price integration using the CoinGecko API",
+      "Explored and mastered GSAP for scroll-triggered and timeline-based animations",
+    ],
+    challenges: [
+      "This was Michael's first deep exploration of GSAP and 3D web animation — the challenge was learning how to integrate Three.js with AngularJS while maintaining smooth performance and a cohesive visual identity",
+    ],
+    designOwnership:
+      "Full UI/UX design and development — every visual and interactive decision is entirely my own.",
+  },
+  {
+    name: "Universal Statues (MK Attractions Philippines)",
+    type: "Production E-commerce Platform",
+    url: "https://universalstatues-us.com/",
+    role: "Frontend Engineer",
+    roleClarification:
+      "I am a Frontend Engineer at MK Attractions Philippines. When I say 'built from scratch,' it means from initial Figma design concepts through complete frontend implementation. Backend APIs and DevOps infrastructure were handled by separate teammates — my ownership spans design to production-ready UI.",
+    timeframe: "February 2026 – Present",
+    status: "Live — new Next.js frontend is deployed; checkout flow still runs on legacy Shopify",
+    description:
+      "A complete rebuild of a legacy Shopify-powered e-commerce platform for a statues and collectibles retailer. The project involved taking the site from an outdated Shopify theme to a modern, performant Next.js application — designing the full UI in Figma, selecting the tech stack, and building everything from the ground up with a minimalist, product-centered design philosophy. The checkout experience remains on the legacy Shopify system, but all browsing, product discovery, and user-facing pages are powered by the new frontend.",
+    techStack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Shopify (checkout only — legacy)",
+      "REST API integration",
+    ],
+    highlights: [
+      "Full UI design from scratch in Figma — established a cohesive visual system including typography, spacing, color palette, and component hierarchy",
+      "Minimalist product-centered design — the entire UX is built around showcasing products cleanly and making the shopping experience feel effortless",
+      "Easy checkout flow — streamlined the path from product discovery to the Shopify checkout, reducing friction compared to the legacy site",
+      "Product browsing, search, and filtering with a focus on usability and fast load times",
+      "Reusable component architecture for maintainability and scalability",
+      "Responsive and accessible design across all devices",
+      "Modernized the tech stack from an outdated Shopify theme to Next.js + TypeScript + Tailwind — a significant architectural leap forward",
+    ],
+    designOwnership:
+      "Full UI/UX design from scratch in Figma. Every design decision — layout, spacing, color, typography, and user flow — is my own work.",
+  },
+  {
+    name: "Investagrams",
+    type: "Production Fintech Platform",
+    url: "https://www.investagrams.com/",
+    role: "Frontend Engineer / UI Developer",
+    timeframe: "June 2021 – August 2025",
+    status: "Live",
+    description:
+      "A stock trading and educational platform serving Filipino investors. Investagrams combines market data, stock screening, portfolio tracking, and educational content in a single platform. As a Frontend Engineer, Michael owned the vast majority of the platform's UI — at peak, 100% of the frontend was his work. Over time, as the team grew, his ownership settled at ~80% of the UI, with other developers handling minor additions like content modals and page updates. He worked across the entire platform, from the homepage through core trading tools to authentication flows.",
+    techStack: [
+      "Angular",
+      "Bootstrap",
+      "TypeScript",
+      "C# ASP.NET (integration reference)",
+      "REST API integration",
+    ],
+    highlights: [
+      "~80% of the platform's UI is Michael's work (was 100% at its peak) — spanning the homepage, stock screener, learn/educational section, portfolio tracking, social/community feed, and authentication pages",
+      "Translated UI/UX designer mockups into responsive, pixel-perfect interfaces across the entire platform",
+      "Owned frontend UX/UI decisions — made independent judgment calls on design implementation and component behavior to optimize user experience",
+      "Evaluated and recommended frontend libraries and tools that improved application performance, developer efficiency, and code maintainability",
+      "Assigned and delegated frontend tasks to junior developers, providing technical guidance and code oversight",
+      "Built reusable Angular components and Bootstrap-based layouts ensuring consistency across enterprise web applications",
+      "Integrated REST APIs and collaborated with backend developers on ASP.NET-based systems",
+      "Ensured cross-browser compatibility and performance optimization across all deliverables",
+    ],
+    designOwnership:
+      "Implemented designs from UI/UX mockups but also contributed significantly to UI/UX decisions — making independent judgment calls on design implementation, component behavior, and user experience improvements.",
+  },
+];

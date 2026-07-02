@@ -38,7 +38,7 @@ export default function DesignSystemPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-10 max-w-4xl mx-auto space-y-16">
+    <div className="min-h-screen bg-background text-foreground p-4 sm:p-10 max-w-4xl mx-auto space-y-8 sm:space-y-16">
 
       {/* ===== BACK TO HOME ===== */}
       <div className="flex items-start">
@@ -54,12 +54,12 @@ export default function DesignSystemPage() {
       </div>
 
       {/* ===== HEADER ===== */}
-      <div>
+      <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
         <h1 className="text-2xl font-semibold">Design System</h1>
         <p className="text-muted-foreground">
           Typography, Logo history & Color tokens
         </p>
-        <Button variant="outline" size="sm" className="gap-2 mt-4" asChild>
+        <Button variant="outline" size="lg" className="gap-2 mt-4 w-full sm:w-fit" asChild>
           <Link href="https://www.figma.com/design/soiaA74uaiLSZMI5yr5nX9/ChatMM---Quick-Draft-UI" target="_blank" rel="noopener noreferrer">
             <ExternalLink className="h-4 w-4" />
             View Figma Design Draft
@@ -68,13 +68,13 @@ export default function DesignSystemPage() {
       </div>
 
       {/* ===== LOGO HISTORY ===== */}
-      <section className="space-y-6">
+      <section className="space-y-4 sm:space-y-6">
         <h2 className="text-lg font-medium border-b border-border pb-2">
           Logo History
         </h2>
 
         {/* Emphasize: Large logo display */}
-        <div className="border border-primary rounded-lg p-10 flex items-center justify-center">
+        <div className="border border-primary rounded-lg sm:p-10 flex items-center justify-center">
           <svg width="120" height="120" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#logo-emphasize-clip)">
               <path d="M10.137 20.8302C10.029 20.9171 9.88587 20.9775 9.70772 21.0113C9.54456 21.0467 9.32304 21.0607 9.04315 21.0531C8.65829 21.0342 8.16582 20.9581 7.56574 20.8248C6.95898 20.6832 6.30035 20.4601 5.58985 20.1556C4.87935 19.851 4.16442 19.4474 3.44505 18.9446C2.73399 18.4351 2.07757 17.8064 1.4758 17.0584C0.807161 16.2274 0.366014 15.4323 0.152356 14.6732C-0.052991 13.9075 -0.0615611 13.2162 0.126646 12.5993C0.316477 11.9674 0.673185 11.4409 1.19677 11.0196C1.57907 10.7121 2.01748 10.5168 2.51202 10.4338C3.00817 10.3358 3.55982 10.4259 4.16696 10.7041C4.76741 10.974 5.42608 11.5119 6.14296 12.3179C6.50221 12.7133 6.77291 13.0158 6.95507 13.2252C7.13885 13.4196 7.2742 13.5708 7.36112 13.6788C7.44967 13.7719 7.53325 13.8758 7.61186 13.9905C7.6921 14.0902 7.81245 14.2398 7.97292 14.4393C8.1334 14.6387 8.37745 14.9421 8.70508 15.3493C8.91904 15.6153 9.10535 15.8213 9.26401 15.9675C9.41599 16.1053 9.59171 16.094 9.79117 15.9335C10.0072 15.7597 10.0559 15.5905 9.93719 15.4259C9.82009 15.2463 9.65871 15.0202 9.45306 14.7475C9.31933 14.5813 9.19563 14.4276 9.08196 14.2863C8.96161 14.1367 8.8212 13.9622 8.66072 13.7627C8.49356 13.5549 8.28376 13.2856 8.0313 12.9548C7.77215 12.6157 7.44858 12.171 7.06059 11.6207C6.43513 10.7411 6.05154 9.97508 5.9098 9.32245C5.76138 8.66152 5.784 8.10256 5.97764 7.64558C6.1646 7.18029 6.44923 6.79386 6.83153 6.48628C7.35512 6.06504 7.94169 5.8327 8.59126 5.78926C9.24244 5.73083 9.91588 5.88723 10.6116 6.25846C11.3156 6.62301 12.0019 7.22083 12.6705 8.05191C13.2723 8.79989 13.7417 9.57905 14.0788 10.3894C14.4242 11.1931 14.6695 11.9745 14.8149 12.7337C14.9603 13.493 15.0371 14.1841 15.0455 14.8071C15.0472 15.4218 15.0161 15.9191 14.9522 16.2991C14.9079 16.5674 14.8469 16.7808 14.769 16.9393C14.6979 17.1061 14.6083 17.233 14.5002 17.3199C14.2675 17.5071 14.0102 17.5361 13.7283 17.407C13.4464 17.2778 13.2318 17.0535 13.0843 16.7341C13.0407 16.6459 12.9645 16.4745 12.8555 16.2199C12.7548 15.9587 12.624 15.66 12.4632 15.324C12.304 14.9729 12.1256 14.6236 11.9281 14.2759C11.7305 13.9283 11.5214 13.6174 11.3008 13.3431C11.0133 12.9858 10.7503 12.7524 10.5117 12.6431C10.2732 12.5339 10.0916 12.5294 9.96696 12.6297C9.85892 12.7166 9.81512 12.8408 9.83556 13.0023C9.8643 13.1572 9.92223 13.3228 10.0093 13.4991C10.1048 13.6688 10.2052 13.8276 10.3105 13.9756C10.4092 14.1152 10.4853 14.2183 10.5388 14.2848C11.2809 15.2073 11.6952 15.935 11.7817 16.4678C11.8764 16.9939 11.7077 17.4309 11.2755 17.7786C10.8434 18.1262 10.3763 18.2008 9.87433 18.0023C9.38067 17.7971 8.76275 17.2332 8.02056 16.3107C7.96707 16.2443 7.88268 16.1479 7.76739 16.0216C7.64541 15.887 7.50762 15.7583 7.35402 15.6354C7.20874 15.5059 7.05939 15.4138 6.90598 15.3593C6.76088 15.298 6.63431 15.3109 6.52627 15.3978C6.40161 15.4981 6.36711 15.6764 6.4228 15.9328C6.47848 16.1892 6.65007 16.4961 6.93759 16.8535C7.15824 17.1277 7.41719 17.3985 7.71445 17.6659C8.01171 17.9333 8.3106 18.1857 8.61111 18.4231C8.91324 18.6455 9.17698 18.8372 9.40231 18.9981C9.63596 19.1524 9.79118 19.2603 9.86798 19.3217C10.1484 19.5341 10.3216 19.7919 10.3874 20.0949C10.4532 20.3979 10.3697 20.643 10.137 20.8302Z" fill="currentColor"/>
@@ -88,10 +88,10 @@ export default function DesignSystemPage() {
           </svg>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-2 sm:gap-6 grid-cols-2">
           {/* Single M */}
-          <div className="bg-card border border-border rounded-lg p-6 flex flex-col items-center justify-center text-center space-y-3">
-            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+          <div className="bg-card border border-border rounded-lg p-2 sm:p-6 flex flex-col items-center justify-center text-center space-y-3">
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
               Letter M (Matamaise font)
             </p>
             <svg width="52" height="48" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -100,8 +100,8 @@ export default function DesignSystemPage() {
           </div>
 
           {/* Two M's combined */}
-          <div className="bg-card border border-border rounded-lg p-6 flex flex-col items-center justify-center text-center space-y-3">
-            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+          <div className="bg-card border border-border rounded-lg p-2 sm:p-6 flex flex-col items-center justify-center text-center space-y-3">
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
               Two M's combined (Final logo)
             </p>
             <svg width="56" height="56" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -124,51 +124,51 @@ export default function DesignSystemPage() {
       </section>
 
       {/* ===== TYPOGRAPHY ===== */}
-      <section className="space-y-6">
+      <section className="space-y-4 sm:space-y-6">
         <h2 className="text-lg font-medium border-b border-border pb-2">
           Typography
         </h2>
 
         {/* Emphasize: Geist hero */}
-        <div className="border border-primary rounded-lg p-10 flex flex-col items-center justify-center text-center space-y-2">
-          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+        <div className="border border-primary rounded-lg p-4 sm:p-10 flex flex-col items-center justify-center text-center space-y-2">
+          <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
             Primary Typeface
           </p>
-          <p className="text-6xl font-sans font-bold tracking-tight">
+          <p className="text-4xl sm:text-6xl font-sans font-bold tracking-tight">
             Geist
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             Geist Sans &bull; Geist Mono
           </p>
         </div>
 
         {/* Font Families */}
-        <div className="space-y-4">
+        <div className="space-y-2 sm:space-y-4">
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
             Font Families
           </h3>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="bg-card border border-border rounded-lg p-4">
+          <div className="grid gap-2 sm:gap-4 md:grid-cols-3">
+            <div className="bg-card border border-border rounded-lg py-2 px-3 sm:p-4">
               <p className="text-xs text-muted-foreground mb-1">--font-sans</p>
-              <p className="text-sm text-muted-foreground mb-2">Geist Sans (default)</p>
+              <p className="text-sm text-muted-foreground mb-1 sm:mb-2">Geist Sans (default)</p>
               <p className="text-base font-sans">
                 The quick brown fox jumps over the lazy dog
               </p>
             </div>
 
-            <div className="bg-card border border-border rounded-lg p-4">
+            <div className="bg-card border border-border rounded-lg py-2 px-3 sm:p-4">
               <p className="text-xs text-muted-foreground mb-1">--font-heading</p>
-              <p className="text-sm text-muted-foreground mb-2">Geist Sans (heading)</p>
+              <p className="text-sm text-muted-foreground mb-1 sm:mb-2">Geist Sans (heading)</p>
               <p className="text-base font-heading">
                 The quick brown fox jumps over the lazy dog
               </p>
             </div>
 
-            <div className="bg-card border border-border rounded-lg p-4">
+            <div className="bg-card border border-border rounded-lg py-2 px-3 sm:p-4">
               <p className="text-xs text-muted-foreground mb-1">--font-mono</p>
-              <p className="text-sm text-muted-foreground mb-2">Geist Mono</p>
-              <p className="text-base font-mono">
+              <p className="text-sm text-muted-foreground mb-1 sm:mb-2">Geist Mono</p>
+              <p className="text-sm sm:text-base font-mono">
                 The quick brown fox jumps over the lazy dog
               </p>
             </div>
@@ -176,7 +176,7 @@ export default function DesignSystemPage() {
         </div>
 
         {/* Type Scale */}
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-4">
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
             Type Scale
           </h3>
@@ -201,7 +201,7 @@ export default function DesignSystemPage() {
         </div>
 
         {/* Font Weights */}
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-4">
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
             Font Weights
           </h3>
@@ -216,7 +216,7 @@ export default function DesignSystemPage() {
             ].map(({ weight, label }) => (
               <div key={weight} className="flex items-baseline gap-4 px-4 py-3">
                 <code className="text-xs text-muted-foreground w-28 shrink-0">{weight}</code>
-                <p className={`text-base ${weight}`}>
+                <p className={`text-sm sm:text-base ${weight}`}>
                   {label} — The quick brown fox jumps over the lazy dog
                 </p>
               </div>
@@ -226,26 +226,26 @@ export default function DesignSystemPage() {
       </section>
 
       {/* ===== COLORS USED ===== */}
-      <section className="space-y-6">
+      <section className="space-y-4 sm:space-y-6">
         <h2 className="text-lg font-medium border-b border-border pb-2">
           Colors Used
         </h2>
 
         {/* Emphasize: 3 main colors */}
-        <div className="border border-primary rounded-lg p-10">
+        <div className="border border-primary rounded-lg p-2 sm:p-10">
           
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-2 sm:gap-4 grid-cols-3">
             <div className="bg-card border border-border rounded-lg overflow-hidden">
               <div className="h-24" style={{ backgroundColor: "var(--background)" }} />
               <div className="p-3 space-y-1">
-                <code className="block text-xs font-mono text-foreground">--background</code>
+                <code className="block text-[10px] sm:text-xs font-mono text-foreground">--background</code>
                 <p className="text-xs text-muted-foreground break-all">#F7F7F8</p>
               </div>
             </div>
             <div className="bg-card border border-border rounded-lg overflow-hidden">
               <div className="h-24" style={{ backgroundColor: "var(--foreground)" }} />
               <div className="p-3 space-y-1">
-                <code className="block text-xs font-mono text-foreground">--foreground</code>
+                <code className="block text-[10px] sm:text-xs font-mono text-foreground">--foreground</code>
                 <p className="text-xs text-muted-foreground break-all">#0A0A0A</p>
               </div>
             </div>
@@ -256,13 +256,13 @@ export default function DesignSystemPage() {
                 </code>
               </div>
               <div className="p-3 space-y-1">
-                <code className="block text-xs font-mono text-foreground">--primary</code>
+                <code className="block text-[10px] sm:text-xs font-mono text-foreground">--primary</code>
                 <p className="text-xs text-muted-foreground break-all">#2ECC5A</p>
               </div>
             </div>
           </div>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-2 sm:gap-3 grid-cols-3 lg:grid-cols-4">
           {colors.map(({ variable, light, type }) => (
             <div
               key={variable}
@@ -287,11 +287,11 @@ export default function DesignSystemPage() {
               </div>
 
               {/* Info */}
-              <div className="p-3 space-y-1">
-                <code className="block text-xs font-mono text-foreground">
+              <div className="p-1 sm:p-3 space-y-1">
+                <code className="block text-[10px] sm:text-xs font-mono text-foreground">
                   {variable}
                 </code>
-                <p className="text-xs text-muted-foreground break-all">
+                <p className="text-xs text-[10px] sm:text-muted-foreground break-all">
                   {light}
                 </p>
               </div>

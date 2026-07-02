@@ -29,6 +29,7 @@ gsap.registerPlugin(Draggable);
 export interface WindowContainerHandle {
   restore: () => void;
   open: () => void;
+  close: () => void;
   reset: () => void;
 }
 
@@ -76,7 +77,7 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
   const liveSize = useRef({ width: 0, height: 0, x: 0 });
   const activeHandle = useRef<string | null>(null);
 
-  // Expose restore, open, and reset methods to parent
+  // Expose restore, open, close, and reset methods to parent
   useImperativeHandle(ref, () => ({
     restore: () => {
       if (windowState === "minimized") {
@@ -89,6 +90,9 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
       setIsMinimized(false);
       setPreviousPosition(defaultPosition);
       setCurrentSize(defaultSize);
+    },
+    close: () => {
+      setWindowState("closed");
     },
     reset: () => {
       setPreviousPosition(defaultPosition);
@@ -393,7 +397,9 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         )}
       >
         {windowState === "maximized" ?          
-          <ChatMMHeader variant="desktop" /> :
+          <div className="hidden md:block">
+            <ChatMMHeader variant="desktop" />
+          </div> :
           <span className="text-sm font-semibold text-muted-foreground">
             {title}
           </span>

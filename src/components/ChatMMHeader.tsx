@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { HelpCircle, ChevronDown } from "lucide-react";
 import { AboutDialog } from "@/components/AboutDialog";
+import { APP_VERSION } from "@/constants/app";
 
 interface ChatMMHeaderProps {
   variant?: "mobile" | "desktop";
@@ -40,8 +41,8 @@ export function ChatMMHeader({ variant = "desktop" }: ChatMMHeaderProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onSelect={() => setAboutOpen(true)}>
-            <span className="text-xs text-muted-foreground flex items-center gap-1 font-thin">
-              ChatMM version 3.4 <HelpCircle className="mr-2 h-3 w-3" />
+            <span className="text-xs text-muted-foreground flex items-center gap-1">
+              ChatMM version {APP_VERSION} <HelpCircle className="mr-2 h-3 w-3" />
             </span>
           </DropdownMenuItem>
         </DropdownMenuContent>

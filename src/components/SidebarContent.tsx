@@ -27,10 +27,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { suggestedPrompts } from "@/data/suggested-prompts"
 import { navItems } from "@/data/navigation"
-import { recents } from "@/data/recents"
 import type { NavItem } from "@/types/navigation"
 import type { Prompt } from "@/types/prompts";
 import { AboutDialog } from "@/components/AboutDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 type WindowState = "normal" | "maximized" | "minimized" | "closed";
 
@@ -39,12 +49,16 @@ interface SidebarContentProps {
   windowState: WindowState;
   onOpenChat: () => void;
   onStart: () => void;
+  onNewChat: () => void;
+  onSearchChat: () => void;
+  onPromptClick: (prompt: string) => void;
 }
 
 
-export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart }: SidebarContentProps) {
+export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart, onNewChat, onSearchChat, onPromptClick }: SidebarContentProps) {
   const [mounted, setMounted] = React.useState(false);
   const [aboutOpen, setAboutOpen] = React.useState(false);
+  const [newChatDialogOpen, setNewChatDialogOpen] = React.useState(false);
   const { theme, setTheme } = useTheme();
 
   React.useEffect(() => {
@@ -57,16 +71,29 @@ export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart }
         setAboutOpen(true);
         break;
       case "new-chat":
-        // Future: start a new chat
+        if (windowState === "closed") {
+          onStart();
+        } else if (windowState === "minimized") {
+          onOpenChat();
+        } else {
+          // normal or maximized — show confirmation
+          setNewChatDialogOpen(true);
+        }
         break;
       case "search-chat":
-        // Future: open search interface
+        onSearchChat();
         break;
       case "portfolio":
-        // Future: navigate to portfolio section
+        window.open("https://portfolio-maykel.netlify.app/", "_blank", "noopener,noreferrer");
+        break;
+      case "linkedin":
+        window.open("https://linkedin.com/in/michael-merin", "_blank", "noopener,noreferrer");
         break;
       case "resume":
-        // Future: navigate to résumé section
+        window.open("https://docs.google.com/document/d/1JokgUdT7mXBkoQhW9cQEj_jaL3-ddtUAouuG4Di5hpg/export?format=pdf", "_blank", "noopener,noreferrer");
+        break;
+      case "contact":
+        window.location.href = "mailto:michael.merin14@gmail.com";
         break;
       default:
         break;
@@ -105,31 +132,19 @@ export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart }
           />
         ))}
       </div>
-      {!isCollapsed && (
+      {!isCollapsed && (windowState !== "closed") && (
         <div className="flex-1 min-h-20 overflow-y-auto scrollbar mt-4">
           <div className={cn("px-3 py-2 space-y-4", isCollapsed && "px-2")}>
-            <div className="space-y-1">
+            <div className="">
               <div className="flex items-center justify-between px-2 mb-2">
                 <p className="text-sm font-semibold">
                   Suggested Prompts
                 </p>
               </div>
               {suggestedPrompts.map((item) => (
-                <PromptItem key={item.id} item={item} />
+                <PromptItem key={item.id} item={item} onPromptClick={onPromptClick} />
               ))}
             </div>
-            {recents.length > 0 && (
-              <div className="space-y-1">
-                <div className="flex items-center justify-between px-2 mb-2">
-                  <p className="text-sm font-semibold">
-                    Recents
-                  </p>
-                </div>
-                {recents.map((item) => (               
-                  <PromptItem key={item.id} item={item} />
-                ))}
-              </div>
-            )}
           </div>
         </div>
       )}
@@ -192,6 +207,18 @@ export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart }
       </div>
     </div>
     <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
+    <AlertDialog open={newChatDialogOpen} onOpenChange={setNewChatDialogOpen}>
+      <AlertDialogContent
+        title="Start new chat?"
+        description="This will reset the conversation and clear recent chats."
+        actionText="New Chat"
+        cancelText="Cancel"
+        onAction={() => {
+          setNewChatDialogOpen(false);
+          onNewChat();
+        }}
+      />
+    </AlertDialog>
     </>
   );
 }
@@ -199,10 +226,12 @@ export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart }
 function SidebarItem({
   item,
   isCollapsed,
+  className,
   onClick,
 } : {
   item: NavItem;
   isCollapsed: boolean;
+  className?: string;
   onClick: () => void;
 }) {
   const content = (
@@ -210,7 +239,8 @@ function SidebarItem({
       className={cn(
         "flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 cursor-pointer",
         "hover:bg-accent hover:text-accent-foreground group relative",
-        isCollapsed ? "justify-center px-2" : "justify-start"
+        isCollapsed ? "justify-center px-2" : "justify-start",
+        className
       )}
       onClick={onClick}
     >
@@ -239,12 +269,14 @@ function SidebarItem({
 }
 
 function PromptItem({
-item
+item,
+onPromptClick
 } : {
 item: Prompt;
+onPromptClick: (prompt: string) => void;
 }) {
   return (
-    <Button variant="ghost" className="w-full justify-start cursor-pointer" key={item.id}>
+    <Button variant="ghost" className="w-full justify-start cursor-pointer" key={item.id} onClick={() => onPromptClick(item.prompt)}>
       <p className="text-sm truncate">{item.title}</p>
     </Button>
   )

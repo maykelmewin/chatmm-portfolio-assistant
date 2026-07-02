@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Menu, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Menu, ChevronLeft, ChevronRight, X, Sparkles, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,9 +16,12 @@ interface ResponsiveSidebarProps {
   windowState: WindowState;
   onOpenChat: () => void;
   onStart: () => void;
+  onNewChat: () => void;
+  onSearchChat: () => void;
+  onPromptClick: (prompt: string) => void;
 }
 
-export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart }: ResponsiveSidebarProps) {
+export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart, onNewChat, onSearchChat, onPromptClick }: ResponsiveSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +49,7 @@ export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart }
           isCollapsed ? "w-[70px]" : "w-[260px]"
         )}
       >
-        <SidebarContent isCollapsed={isCollapsed} windowState={windowState} onOpenChat={onOpenChat} onStart={onStart} />
+        <SidebarContent isCollapsed={isCollapsed} windowState={windowState} onOpenChat={onOpenChat} onStart={onStart} onNewChat={onNewChat} onSearchChat={onSearchChat} onPromptClick={onPromptClick} />
         
         {/* Collapse Toggle Button */}
         <Button
@@ -65,8 +68,8 @@ export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart }
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-19">
         {/* Mobile Header */}
-        <header className="md:hidden flex items-center justify-between p-4 border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
-          <div className="flex items-center gap-3">
+        <header className="md:hidden flex items-center gap-2 py-2 px-4 border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+          <div className="flex items-center gap-3 mr-auto">
              <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-9 w-9">
@@ -74,15 +77,26 @@ export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart }
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="p-0 w-[280px] sm:w-[320px]">
-                <SidebarContent isCollapsed={false} windowState={windowState} onOpenChat={onOpenChat} onStart={onStart} />
+                <SidebarContent isCollapsed={false} windowState={windowState} onOpenChat={onOpenChat} onStart={onStart} onNewChat={onNewChat} onSearchChat={onSearchChat} onPromptClick={onPromptClick} />
               </SheetContent>
             </Sheet>
             <ChatMMHeader variant="mobile" />
           </div>
           <Avatar className="ring-2 ring-background size-8">
             <AvatarImage src="https://github.com/maykelmewin.png" />
-            <AvatarFallback>MM</AvatarFallback>
+            <AvatarFallback>MM</AvatarFallback>            
           </Avatar>
+          {windowState !== "closed" ? (
+            <Button variant="outline" className="w-fit h-9 rounded-full cursor-pointer" disabled={windowState !== "minimized"} onClick={onOpenChat}>
+              <ExternalLink className="size-4" /> 
+            Open Chat
+            </Button>            
+          ) : (
+            <Button variant="outlinePrimary" className="w-fit h-9 rounded-full cursor-pointer px-4" onClick={onStart}>
+              <Sparkles className="size-4" /> 
+              Start
+            </Button>
+          )}
         </header>
 
         {/* Page Content */}

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -104,7 +105,7 @@
   --popover: #0D0D0D;
   --popover-foreground: #EDEDED;
 
-  --primary: #16a34a;
+  --primary: #2ECC5A;
   --primary-foreground: #0D0D0D;
 
   --secondary: rgb(255 255 255 / 0.04);
@@ -125,7 +126,7 @@
 
   --sidebar: rgb(255 255 255 / 0.02);
   --sidebar-foreground: #EDEDED;
-  --sidebar-primary: #16a34a;
+  --sidebar-primary: #2ECC5A;
   --sidebar-primary-foreground: #0D0D0D;
   --sidebar-accent: rgb(255 255 255 / 0.04);
   --sidebar-accent-foreground: #EDEDED;
