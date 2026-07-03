@@ -2,7 +2,7 @@ export const projects = [
   {
     name: "ChatMM",
     type: "Current Project",
-    url: null,
+    url: "https://chatmm-portfolio-assistant.vercel.app/",
     role: "Solo Developer & Designer",
     timeframe: "Started July 2026 (1 week in development)",
     status: "In Development — soon to deploy (Vercel or Netlify)",
