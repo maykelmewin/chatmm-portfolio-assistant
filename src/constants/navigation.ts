@@ -1,7 +1,7 @@
 import {
   MessageCircle,
   Search,
-  Briefcase,
+  Code2,
   FileDown,
   CircleQuestionMark,
   Link,
@@ -25,19 +25,13 @@ export const navItems: NavItem[] = [
   {
     id: "portfolio",
     title: "Portfolio",
-    icon: Briefcase,
+    icon: Code2,
     group: "profile",
   },
   {
     id: "resume",
     title: "Resume",
     icon: FileDown,
-    group: "profile",
-  },
-  {
-    id: "linkedin",
-    title: "LinkedIn",
-    icon: Link,
     group: "profile",
   },
   {

@@ -16,7 +16,7 @@ import {
   Sun,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Logo } from "@/components/Logo";
+import { Logo } from "@/components/icons/Logo";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -86,9 +86,6 @@ export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart, 
       case "portfolio":
         window.open("https://portfolio-maykel.netlify.app/", "_blank", "noopener,noreferrer");
         break;
-      case "linkedin":
-        window.open("https://linkedin.com/in/michael-merin", "_blank", "noopener,noreferrer");
-        break;
       case "resume":
         window.open("https://docs.google.com/document/d/1JokgUdT7mXBkoQhW9cQEj_jaL3-ddtUAouuG4Di5hpg/export?format=pdf", "_blank", "noopener,noreferrer");
         break;
@@ -133,7 +130,7 @@ export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart, 
         ))}
       </div>
       {!isCollapsed && (windowState !== "closed") && (
-        <div className="flex-1 min-h-20 overflow-y-auto scrollbar mt-4">
+        <div className="flex-1 min-h-20 overflow-y-auto scrollbar mt-4">          
           <div className={cn("px-3 py-2 space-y-4", isCollapsed && "px-2")}>
             <div className="">
               <div className="flex items-center justify-between px-2 mb-2">
@@ -147,7 +144,7 @@ export function SidebarContent({ isCollapsed, windowState, onOpenChat, onStart, 
             </div>
           </div>
         </div>
-      )}
+      )}    
       {/* Footer */}
       <div className="mt-auto p-4 space-y-2">
         <div className={cn(
@@ -245,7 +242,7 @@ function SidebarItem({
       onClick={onClick}
     >
       <item.icon className={cn(
-        "h-5 w-5 shrink-0 transition-colors",
+        "h-5 w-5 shrink-0 transition-colors transition-fill",
         "text-foreground"
       )} />
       {!isCollapsed && (

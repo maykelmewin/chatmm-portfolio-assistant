@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Home, CircleQuestionMark  } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Logo } from "@/components/Logo";
+import { Logo } from "@/components/icons/Logo";
 import { AboutDialog } from "@/components/AboutDialog";
 
 export default function NotFound() {
@@ -33,7 +33,7 @@ export default function NotFound() {
           </div>
 
           {/* Back to Home Button */}
-          <div className="flex justify-center gap-2">              
+          <div className="flex flex-wrap justify-center gap-2 w-full">              
             <Button variant="outline" asChild size="lg" className="gap-2 cursor-pointer">
               <Link href="/">
                 <Home className="h-4 w-4" />

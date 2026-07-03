@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Logo } from "@/components/Logo";
+import { Logo } from "@/components/icons/Logo";
 import { APP_VERSION } from "@/constants/app";
 import {
   Dialog,

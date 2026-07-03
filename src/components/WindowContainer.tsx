@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState, useLayoutEffect, useCallback, forwardRef, useImperativeHandle, type ReactNode } from "react";
+import { useRef, useState, useLayoutEffect, useCallback, forwardRef, useImperativeHandle, type ReactNode, useEffect } from "react";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { Button } from "@/components/ui/button"
+import { useBreakpoints } from "@/lib/hooks/useBreakpoints";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,6 +39,7 @@ interface WindowContainerProps {
   title?: string;
   defaultPosition?: { x: number; y: number };
   defaultSize?: { width: number; height: number };
+  propSize?: { width: number; height: number };
   boundsParent?: string;
   minWidth?: number;
   minHeight?: number;
@@ -341,6 +343,17 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
     onStateChange?.(windowState);
   }, [windowState, onStateChange]);
 
+  // Auto-maximize on medium and below breakpoints
+  const { isBelowXl } = useBreakpoints();
+  
+  useEffect(() => {
+    if (isBelowXl && windowState === "normal") {
+      setWindowState("maximized");
+    } else if (!isBelowXl && windowState === "maximized") {
+      setWindowState("normal");
+    }
+  }, [isBelowXl]);
+
   // Handle minimize
   const handleMinimize = () => {
     if (windowState === "minimized") {
@@ -375,8 +388,8 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
     <div
       ref={containerRef}
       className={cn(
-        "absolute border bg-background dark:shadow-none shadow-lg flex flex-col",
-        windowState !== "maximized" && "rounded-lg"
+        "absolute bg-background dark:shadow-none shadow-lg flex flex-col",
+        windowState !== "maximized" && "rounded-lg border"
       )}
       style={{
         width: currentSize.width,
@@ -393,7 +406,7 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         ref={titleBarRef}
         className={cn(
           "flex items-center select-none shrink-0",
-          windowState !== "maximized" ? "cursor-grab active:cursor-grabbing bg-muted/50 px-4 py-2 border-b" : "px-8 py-4"
+          windowState !== "maximized" ? "cursor-grab active:cursor-grabbing bg-muted/50 pl-4 pr-1 sm:px-4 py-1 sm:py-2 border-b" : "px-1 sm:px-8 py-1 sm:py-4"
         )}
       >
         {windowState === "maximized" ?          

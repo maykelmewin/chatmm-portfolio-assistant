@@ -2,7 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Logo } from "@/components/Logo";
+import { Logo } from "@/components/icons/Logo";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -31,7 +31,7 @@ export function ChatMMHeader({ variant = "desktop" }: ChatMMHeaderProps) {
           <Button
             variant="none"
             className={cn(
-              "flex items-center gap-1 px-2 h-auto font-semibold cursor-pointer group",
+              "flex items-center gap-1 px-0 sm:px-2 h-auto font-semibold cursor-pointer group",
               isMobile ? "text-base" : "text-xl"
             )}
           >

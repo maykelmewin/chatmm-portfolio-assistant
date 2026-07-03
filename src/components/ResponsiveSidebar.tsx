@@ -69,7 +69,7 @@ export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart, 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-19">
         {/* Mobile Header */}
         <header className="md:hidden flex items-center gap-2 py-2 px-4 border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
-          <div className="flex items-center gap-3 mr-auto">
+          <div className="flex items-center gap-1 sm:gap-3 mr-auto">
              <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-9 w-9">
@@ -82,10 +82,6 @@ export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart, 
             </Sheet>
             <ChatMMHeader variant="mobile" />
           </div>
-          <Avatar className="ring-2 ring-background size-8">
-            <AvatarImage src="https://github.com/maykelmewin.png" />
-            <AvatarFallback>MM</AvatarFallback>            
-          </Avatar>
           {windowState !== "closed" ? (
             <Button variant="outline" className="w-fit h-9 rounded-full cursor-pointer" disabled={windowState !== "minimized"} onClick={onOpenChat}>
               <ExternalLink className="size-4" /> 
@@ -97,12 +93,16 @@ export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart, 
               Start
             </Button>
           )}
+          <Avatar className="ring-2 ring-background size-8">
+            <AvatarImage src="https://github.com/maykelmewin.png" />
+            <AvatarFallback>MM</AvatarFallback>            
+          </Avatar>
         </header>
 
         {/* Page Content */}
         <div className="relative flex-1 overflow-y-auto p-0 md:p-0">
           {children}
-          <div className="md:flex hidden absolute top-0 left-0 z-99  justify-center items-center h-16 px-6">
+          <div className="md:flex hidden absolute top-0 left-0 justify-center items-center h-16 px-6">
             <ChatMMHeader variant="desktop" />
           </div>
         </div>
