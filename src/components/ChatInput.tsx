@@ -61,7 +61,7 @@ const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(function ChatInput
   }), []);
 
   return (
-    <div className={cn("max-w-3xl mx-auto border bg-white/8 focus-within:ring-1 focus-within:ring-foreground transition-all overflow-hidden flex items-end px-2 gap-4 transition-all duration-150",
+    <div className={cn("max-w-3xl mx-auto border bg-foreground/8 focus-within:ring-1 focus-within:ring-foreground transition-all overflow-hidden flex items-end px-2 gap-4 transition-all duration-150",
       isTwoRows ? "rounded-3xl" : "rounded-[2.5rem]"
     )}>
       <textarea
@@ -71,7 +71,7 @@ const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(function ChatInput
           "flex-1 bg-transparent border-none focus:ring-0 resize-none min-h-[48px] outline-none leading-[48px] scrollbar pl-4 overflow-y-auto max-h-50",
           isTwoRows ? "leading-relaxed py-5" : "leading-[48px]"
         )}
-        placeholder="Ask anything about me. "
+        placeholder="Ask about Michael. "
         rows={1}
         value={value}
         onChange={handleChange}

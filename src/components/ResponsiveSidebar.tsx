@@ -88,7 +88,7 @@ export function ResponsiveSidebar({ children, windowState, onOpenChat, onStart, 
             Open Chat
             </Button>            
           ) : (
-            <Button variant="outlinePrimary" className="w-fit h-9 rounded-full cursor-pointer px-4" onClick={onStart}>
+            <Button variant="outlinePrimary" className="w-fit h-9 rounded-full cursor-pointer px-7" onClick={onStart}>
               <Sparkles className="size-4" /> 
               Start
             </Button>

@@ -43,8 +43,8 @@ interface WindowContainerProps {
 
 type WindowState = "normal" | "maximized" | "minimized" | "closed";
 
-const MIN_WIDTH = 400;
-const MIN_HEIGHT = 300;
+const MIN_WIDTH = 300;
+const MIN_HEIGHT = 500;
 
 const BIG_SCREEN_DEFAULTS = {
   position: { x: 40, y: 40 },
@@ -206,7 +206,14 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
 
       const parentEl = el.parentElement;
 
-      const handleMouseMove = (ev: MouseEvent) => {
+      const getClientCoords = (ev: MouseEvent | TouchEvent) => {
+        if ("touches" in ev) {
+          return { x: ev.touches[0].clientX, y: ev.touches[0].clientY };
+        }
+        return { x: ev.clientX, y: ev.clientY };
+      };
+
+      const handleResizeMove = (ev: MouseEvent | TouchEvent) => {
         const el2 = containerRef.current;
         if (!el2) return;
 
@@ -215,8 +222,9 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         const maxWidth = parentRect ? parentRect.width : Infinity;
         const maxHeight = parentRect ? parentRect.height : Infinity;
 
-        const dx = ev.clientX - resizeStart.current.x;
-        const dy = ev.clientY - resizeStart.current.y;
+        const { x: clientX, y: clientY } = getClientCoords(ev);
+        const dx = clientX - resizeStart.current.x;
+        const dy = clientY - resizeStart.current.y;
         let newWidth = resizeStart.current.width;
         let newHeight = resizeStart.current.height;
         let newX = previousPositionRef.current.x;
@@ -245,9 +253,11 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         });
       };
 
-      const handleMouseUp = () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
+      const handleResizeEnd = () => {
+        document.removeEventListener("mousemove", handleResizeMove);
+        document.removeEventListener("mouseup", handleResizeEnd);
+        document.removeEventListener("touchmove", handleResizeMove);
+        document.removeEventListener("touchend", handleResizeEnd);
         activeHandle.current = null;
 
         // Save final size and position from live values
@@ -259,8 +269,10 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         previousPositionRef.current = { ...previousPositionRef.current, x: finalX };
       };
 
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("mousemove", handleResizeMove);
+      document.addEventListener("mouseup", handleResizeEnd);
+      document.addEventListener("touchmove", handleResizeMove, { passive: false });
+      document.addEventListener("touchend", handleResizeEnd);
     },
     [minWidth, minHeight],
   );
