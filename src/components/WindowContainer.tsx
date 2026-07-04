@@ -5,15 +5,10 @@ import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { Button } from "@/components/ui/button"
 import { useBreakpoints } from "@/lib/hooks/useBreakpoints";
+import { useIsTouchDevice } from "@/lib/hooks/useIsTouchDevice";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { cn } from "@/lib/utils";
@@ -51,11 +46,20 @@ type WindowState = "normal" | "maximized" | "minimized" | "closed";
 const MIN_WIDTH = 400;
 const MIN_HEIGHT = 300;
 
+const BIG_SCREEN_DEFAULTS = {
+  position: { x: 40, y: 40 },
+  size: { width: 800, height: 600 },
+} as const;
+
+const SMALL_SCREEN_DEFAULTS = {
+  position: { x: 16, y: 16 },
+} as const;
+
 const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(function WindowContainer({
   children,
   title = "Window",
-  defaultPosition = { x: 40, y: 40 },
-  defaultSize = { width: 800, height: 600 },
+  defaultPosition = BIG_SCREEN_DEFAULTS.position,
+  defaultSize = BIG_SCREEN_DEFAULTS.size,
   boundsParent,
   minWidth = MIN_WIDTH,
   minHeight = MIN_HEIGHT,
@@ -65,19 +69,41 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
   const titleBarRef = useRef<HTMLDivElement>(null);
   const draggableRef = useRef<Draggable | null>(null);
   const [windowState, setWindowState] = useState<WindowState>("normal");
-  const [previousPosition, setPreviousPosition] = useState(defaultPosition);
   const [currentSize, setCurrentSize] = useState(defaultSize);
-  const [isVisible, setIsVisible] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
   const [isCloseDialogOpen, setIsCloseDialogOpen] = useState(false);
   const prevWindowStateRef = useRef<WindowState>("normal");
+  const onStateChangeRef = useRef(onStateChange);
+  onStateChangeRef.current = onStateChange;
+
+  // Refs to mirror position/size for use in callbacks/effects without re-render triggers
+  const previousPositionRef = useRef(defaultPosition);
+  const currentSizeRef = useRef(currentSize);
+  currentSizeRef.current = currentSize;
 
   // Resize state refs
   const resizeStart = useRef({ x: 0, y: 0, width: 0, height: 0, left: 0 });
   const liveSize = useRef({ width: 0, height: 0, x: 0 });
   const activeHandle = useRef<string | null>(null);
+
+  // Auto-maximize on medium and below breakpoints
+  const { isBelowXl } = useBreakpoints();
+  const isTouch = useIsTouchDevice();
+
+  // Compute responsive defaults based on viewport
+  const getResponsiveDefaults = useCallback((small: boolean) => {
+    if (small && typeof window !== "undefined") {
+      return {
+        position: SMALL_SCREEN_DEFAULTS.position,
+        size: { width: Math.round(window.innerWidth * 0.8), height: Math.round(window.innerHeight * 0.8) },
+      };
+    }
+    return {
+      position: defaultPosition,
+      size: defaultSize,
+    };
+  }, [defaultPosition, defaultSize]);
 
   // Expose restore, open, close, and reset methods to parent
   useImperativeHandle(ref, () => ({
@@ -88,30 +114,31 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
     },
     open: () => {
       setWindowState("normal");
-      setIsVisible(true);
       setIsMinimized(false);
-      setPreviousPosition(defaultPosition);
-      setCurrentSize(defaultSize);
+      const { position, size } = getResponsiveDefaults(isBelowXl);
+      previousPositionRef.current = position;
+      setCurrentSize(size);
     },
     close: () => {
       setWindowState("closed");
     },
     reset: () => {
-      setPreviousPosition(defaultPosition);
-      setCurrentSize(defaultSize);
+      const { position, size } = getResponsiveDefaults(isBelowXl);
+      previousPositionRef.current = position;
+      setCurrentSize(size);
       const el = containerRef.current;
       if (el) {
         gsap.to(el, {
-          x: defaultPosition.x,
-          y: defaultPosition.y,
-          width: defaultSize.width,
-          height: defaultSize.height,
+          x: position.x,
+          y: position.y,
+          width: size.width,
+          height: size.height,
           duration: 0.3,
           ease: "power2.out",
         });
       }
     },
-  }), [windowState, defaultPosition, defaultSize]);
+  }), [windowState, defaultPosition, defaultSize, getResponsiveDefaults, isBelowXl]);
 
   // Set mounted flag (client-side only)
   useLayoutEffect(() => {
@@ -125,8 +152,16 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
     const titleBar = titleBarRef.current;
     if (!el || !titleBar) return;
 
+    // Apply responsive defaults for small screens
+    const { position, size } = getResponsiveDefaults(isBelowXl);
+    previousPositionRef.current = position;
+    currentSizeRef.current = size;
+    if (isBelowXl) {
+      setCurrentSize(size);
+    }
+
     // Set initial position and fade in
-    gsap.set(el, { x: defaultPosition.x, y: defaultPosition.y, opacity: 0, scale: 0.8 });
+    gsap.set(el, { x: position.x, y: position.y, opacity: 0, scale: 0.8 });
     gsap.to(el, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" });
 
     // Create Draggable once — no inertia, completely free, but bounded to parent if specified
@@ -135,7 +170,7 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
       trigger: titleBar,
       bounds: boundsParent,
       onDragEnd: function () {
-        setPreviousPosition({ x: this.x, y: this.y });
+        previousPositionRef.current = { x: this.x, y: this.y };
       },
     })[0];
 
@@ -145,28 +180,29 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
       draggable.kill();
       draggableRef.current = null;
     };
-  }, [isMounted, defaultPosition]);
+  }, [isMounted, defaultPosition, isBelowXl, getResponsiveDefaults]);
 
-  // Handle resize mousedown
+  // Handle resize mousedown/touchstart
   const handleResizeStart = useCallback(
-    (handle: string, e: React.MouseEvent) => {
+    (handle: string, e: React.MouseEvent | React.TouchEvent) => {
       e.preventDefault();
       e.stopPropagation();
       const el = containerRef.current;
       if (!el) return;
 
       activeHandle.current = handle;
-      setIsResizing(true);
 
       const rect = el.getBoundingClientRect();
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
       resizeStart.current = {
-        x: e.clientX,
-        y: e.clientY,
+        x: clientX,
+        y: clientY,
         width: rect.width,
         height: rect.height,
         left: rect.left,
       };
-      liveSize.current = { width: rect.width, height: rect.height, x: previousPosition.x };
+      liveSize.current = { width: rect.width, height: rect.height, x: previousPositionRef.current.x };
 
       const parentEl = el.parentElement;
 
@@ -183,7 +219,7 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         const dy = ev.clientY - resizeStart.current.y;
         let newWidth = resizeStart.current.width;
         let newHeight = resizeStart.current.height;
-        let newX = previousPosition.x;
+        let newX = previousPositionRef.current.x;
 
         if (handle === "right") {
           newWidth = resizeStart.current.width + dx;
@@ -192,7 +228,7 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
           newWidth = resizeStart.current.width - dx;
           newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
           // Adjust x position so the right edge stays put, clamped to parent
-          const oldRight = previousPosition.x + resizeStart.current.width;
+          const oldRight = previousPositionRef.current.x + resizeStart.current.width;
           newX = Math.max(0, oldRight - newWidth);
         } else if (handle === "bottom") {
           newHeight = resizeStart.current.height + dy;
@@ -200,19 +236,18 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         }
 
         // Track live values for mouseup
-        liveSize.current = { width: newWidth, height: newHeight, x: handle === "left" ? newX : previousPosition.x };
+        liveSize.current = { width: newWidth, height: newHeight, x: handle === "left" ? newX : previousPositionRef.current.x };
 
         gsap.set(el2, {
           width: newWidth,
           height: newHeight,
-          x: handle === "left" ? newX : previousPosition.x,
+          x: handle === "left" ? newX : previousPositionRef.current.x,
         });
       };
 
       const handleMouseUp = () => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
-        setIsResizing(false);
         activeHandle.current = null;
 
         // Save final size and position from live values
@@ -221,13 +256,13 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         const finalX = liveSize.current.x;
 
         setCurrentSize({ width: finalWidth, height: finalHeight });
-        setPreviousPosition((prev) => ({ ...prev, x: finalX }));
+        previousPositionRef.current = { ...previousPositionRef.current, x: finalX };
       };
 
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
     },
-    [previousPosition, minWidth, minHeight],
+    [minWidth, minHeight],
   );
 
   // React to windowState changes — all GSAP animations + toggle draggable
@@ -269,7 +304,6 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         duration: 0.3,
         ease: "easeInOut",
         onComplete: () => {
-          setIsVisible(false);
           setIsMinimized(true);
         },
       });
@@ -281,21 +315,19 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         opacity: 0,
         scale: 0.5,
         duration: 0.2,
-        onComplete: () => setIsVisible(false),
       });
       return;
     }
 
     // Restoring to normal
     if (windowState === "normal") {
-      setIsVisible(true);
 
       // Restoring from closed — fade back in
       if (prev === "closed") {
-        gsap.set(el, { width: currentSize.width, height: currentSize.height, left: 0, top: 0 });
+        gsap.set(el, { width: currentSizeRef.current.width, height: currentSizeRef.current.height, left: 0, top: 0 });
         gsap.fromTo(
           el,
-          { opacity: 0, scale: 0.5, x: previousPosition.x, y: previousPosition.y },
+          { opacity: 0, scale: 0.5, x: previousPositionRef.current.x, y: previousPositionRef.current.y },
           { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
         );
         return;
@@ -308,13 +340,13 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         const parentRect = el.parentElement?.getBoundingClientRect();
         const offsetX = parentRect?.left || 0;
         const offsetY = parentRect?.top || 0;
-        gsap.set(el, { width: currentSize.width, height: currentSize.height, left: 0, top: 0 });
+        gsap.set(el, { width: currentSizeRef.current.width, height: currentSizeRef.current.height, left: 0, top: 0 });
         gsap.fromTo(
           el,
           { x: -offsetX, y: vh - offsetY, opacity: 0, scale: 0 },
           {
-            x: previousPosition.x,
-            y: previousPosition.y,
+            x: previousPositionRef.current.x,
+            y: previousPositionRef.current.y,
             opacity: 1,
             scale: 1,
             duration: 0.3,
@@ -327,30 +359,27 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
       // Restoring from maximized
       if (prev === "maximized") {
         gsap.to(el, {
-          x: previousPosition.x,
-          y: previousPosition.y,
-          width: currentSize.width,
-          height: currentSize.height,
+          x: previousPositionRef.current.x,
+          y: previousPositionRef.current.y,
+          width: currentSizeRef.current.width,
+          height: currentSizeRef.current.height,
           duration: 0.3,
           ease: "power2.out",
         });
       }
     }
-  }, [windowState, currentSize, previousPosition]);
+  }, [windowState]);
 
   // Notify parent of state changes
   useLayoutEffect(() => {
-    onStateChange?.(windowState);
-  }, [windowState, onStateChange]);
+    onStateChangeRef.current?.(windowState);
+  }, [windowState]);
 
-  // Auto-maximize on medium and below breakpoints
-  const { isBelowXl } = useBreakpoints();
-  
   useEffect(() => {
-    if (isBelowXl && windowState === "normal") {
-      setWindowState("maximized");
-    } else if (!isBelowXl && windowState === "maximized") {
-      setWindowState("normal");
+    if (isBelowXl) {
+      setWindowState(prev => prev === "normal" ? "maximized" : prev);
+    } else {
+      setWindowState(prev => prev === "maximized" ? "normal" : prev);
     }
   }, [isBelowXl]);
 
@@ -464,33 +493,67 @@ const WindowContainer = forwardRef<WindowContainerHandle, WindowContainerProps>(
         <>
           {/* Bottom Handle */}
           <div
-            className="absolute bottom-0 left-0 right-0 h-2 cursor-s-resize hover:bg-primary/20 transition-colors z-10"
+            className={cn(
+              "absolute bottom-0 left-0 right-0 z-10 flex items-end justify-center",
+              isTouch ? "h-8 cursor-s-resize" : "h-2 cursor-s-resize hover:bg-primary/20 transition-colors"
+            )}
             onMouseDown={(e) => handleResizeStart("bottom", e)}
-          />
+            onTouchStart={(e) => handleResizeStart("bottom", e)}
+          >
+            {isTouch && <div className="w-16 h-1 bg-primary/20 rounded-full mb-1.5" />}
+          </div>
 
           {/* Right Handle */}
           <div
-            className="absolute top-0 right-0 bottom-0 w-2 cursor-e-resize hover:bg-primary/20 transition-colors z-10"
+            className={cn(
+              "absolute top-0 right-0 bottom-0 z-10 flex items-center justify-end",
+              isTouch ? "w-8 cursor-e-resize" : "w-2 cursor-e-resize hover:bg-primary/20 transition-colors"
+            )}
             onMouseDown={(e) => handleResizeStart("right", e)}
-          />
+            onTouchStart={(e) => handleResizeStart("right", e)}
+          >
+            {isTouch && <div className="h-16 w-1 bg-primary/20 rounded-full mr-1.5" />}
+          </div>
 
           {/* Left Handle */}
           <div
-            className="absolute top-0 left-0 bottom-0 w-2 cursor-w-resize hover:bg-primary/20 transition-colors z-10"
+            className={cn(
+              "absolute top-0 left-0 bottom-0 z-10 flex items-center justify-start",
+              isTouch ? "w-8 cursor-w-resize" : "w-2 cursor-w-resize hover:bg-primary/20 transition-colors"
+            )}
             onMouseDown={(e) => handleResizeStart("left", e)}
-          />
+            onTouchStart={(e) => handleResizeStart("left", e)}
+          >
+            {isTouch && <div className="h-16 w-1 bg-primary/20 rounded-full ml-1.5" />}
+          </div>
 
           {/* Bottom-Right Corner */}
           <div
-            className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-20"
+            className={cn(
+              "absolute bottom-0 right-0 z-20 flex items-center justify-center",
+              isTouch ? "w-10 h-10 cursor-se-resize" : "w-4 h-4 cursor-se-resize"
+            )}
             onMouseDown={(e) => handleResizeStart("right", e)}
-          />
+            onTouchStart={(e) => handleResizeStart("right", e)}
+          >
+            {isTouch && (
+              <div className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-primary/20 rounded-br-sm" />
+            )}
+          </div>
 
           {/* Bottom-Left Corner */}
           <div
-            className="absolute bottom-0 left-0 w-4 h-4 cursor-sw-resize z-20"
+            className={cn(
+              "absolute bottom-0 left-0 z-20 flex items-center justify-center",
+              isTouch ? "w-10 h-10 cursor-sw-resize" : "w-4 h-4 cursor-sw-resize"
+            )}
             onMouseDown={(e) => handleResizeStart("left", e)}
-          />
+            onTouchStart={(e) => handleResizeStart("left", e)}
+          >
+            {isTouch && (
+              <div className="absolute bottom-1 left-1 w-3 h-3 border-b-2 border-l-2 border-primary/20 rounded-bl-sm" />
+            )}
+          </div>
         </>
       )}
     </div>

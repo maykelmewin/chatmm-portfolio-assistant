@@ -88,7 +88,7 @@ export default function HomePage() {
 
   return (
     <ResponsiveSidebar windowState={windowState} onOpenChat={handleOpenChat} onStart={handleStart} onNewChat={handleNewChat} onSearchChat={handleSearchChat} onPromptClick={handleSendMessage}>
-      <div className="main-content-container relative min-h-[calc(100vh-54px)] md:min-h-[calc(100vh)] overflow-hidden">
+      <div className="main-content-container relative min-h-[calc(100dvh-54px)] md:min-h-[calc(100dvh)] overflow-hidden">
         <WindowContainer ref={windowRef} title="AI Portfolio Assistant" defaultPosition={{ x: 60, y: 60 }} propSize={{ width: 820, height: 640 }} boundsParent=".main-content-container" onStateChange={setWindowState}>
           <div className="flex flex-col justify-center h-full bg-background py-4">
             {!isInitial &&
